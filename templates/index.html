@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chatbot</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        #chat-container {
+            border-radius: 8px;
+            width: 400px;
+            height: 500px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #message-list {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between messages */
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 75%;
+            word-wrap: break-word;
+            line-height: 1.4; /* Improved line height */
+            font-size: 14px; /* Font size for messages */
+        }
+
+        .user {
+            align-self: flex-end;
+            background-color: #007bff;
+            color: white;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .assistant {
+            align-self: flex-start;
+            background-color: #e2e3e5;
+            color: #333;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        #input-container {
+            display: flex;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-top: 1px solid #ccc;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <h1 style="text-align:center; font-size: 24px; margin: 10px 0;">Simple Chatbot</h1>
+        <div id="message-list"></div>
+        <div id="input-container">
+            <input type="text" id="user-input" placeholder="Type your message here..." />
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            const maxMessages = 10;
+
+            $('#send-btn').click(function() {
+                const userInput = $('#user-input').val();
+                if (userInput) {
+                    $('#message-list').append(`<div class="message user">${userInput}</div>`);
+                    $.post('/chat', { user_input: userInput }, function(data) {
+                        $('#message-list').append(`<div class="message assistant">${data.response}</div>`);
+                        $('#user-input').val('');
+
+                        if ($('#message-list .message').length > maxMessages) {
+                            $('#message-list .message').slice(0, $('#message-list .message').length - maxMessages).remove();
+                        }
+
+                        $('#message-list').scrollTop($('#message-list')[0].scrollHeight);
+                    }).fail(function() {
+                        $('#message-list').append(`<div class="message assistant">Error: Unable to get response from the server.</div>`);
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
