@@ -63,7 +63,6 @@ executing==2.0.1
 fastavro==1.9.7
 filelock==3.15.4
 firebase-admin==6.5.0
-flappy_bird @ file:///C:/PROJECTS/Flappy%20Bird%20-%20Pygame/dist/flappy_bird-0.1-py3-none-any.whl#sha256=60d95fc3e445373582daada53a4ddba45ec1e9a465ad735fa00b2916fccd16a2
 Flask==3.0.3
 Flask-Admin==1.6.1
 Flask-Cors==4.0.1
